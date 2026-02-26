@@ -1,0 +1,268 @@
+---
+import AppLayout from '../layouts/AppLayout.astro';
+import { patients } from '../data/mock';
+---
+
+<AppLayout title="録音" activeTab="record">
+  <!-- 利用者選択 -->
+  <div class="mb-8">
+    <label class="block text-sm font-medium text-teal-700 mb-2">利用者を選択</label>
+    <div class="relative">
+      <select id="patientSelect" class="w-full bg-white rounded-2xl px-4 py-3.5 shadow-card border border-warm-200/30 text-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-teal-300 focus:border-teal-400 transition-all">
+        <option value="">-- 利用者を選んでください --</option>
+        {patients.map(p => (
+          <option value={p.id}>{p.avatar} {p.name}（{p.careLevel}）</option>
+        ))}
+      </select>
+      <svg class="w-4 h-4 text-warm-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+      </svg>
+    </div>
+  </div>
+
+  <!-- 録音ボタン -->
+  <div class="flex flex-col items-center mb-8">
+    <!-- タイマー -->
+    <div id="timer" class="font-mono text-4xl font-bold text-teal-800 mb-8 tabular-nums tracking-wider opacity-40 transition-opacity duration-300">
+      00:00
+    </div>
+
+    <!-- 録音ボタン本体 -->
+    <div class="relative">
+      <!-- パルスリング（録音中アニメーション） -->
+      <div id="pulseRing1" class="absolute inset-0 rounded-full bg-coral-400/20 scale-100 opacity-0 transition-opacity duration-500"></div>
+      <div id="pulseRing2" class="absolute inset-0 rounded-full bg-coral-400/10 scale-100 opacity-0 transition-opacity duration-500" style="animation-delay: 1s"></div>
+
+      <button
+        id="recordBtn"
+        disabled
+        class="relative w-32 h-32 rounded-full bg-gradient-to-br from-warm-200 to-warm-300 shadow-lg flex items-center justify-center transition-all duration-300 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+      >
+        <div id="recordIcon" class="transition-all duration-300">
+          <svg class="w-12 h-12 text-warm-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 15c1.66 0 2.99-1.34 2.99-3L15 6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3z"/>
+            <path d="M17 12c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V22h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+          </svg>
+        </div>
+      </button>
+    </div>
+
+    <!-- ステータステキスト -->
+    <p id="statusText" class="mt-6 text-sm text-warm-400 font-medium">利用者を選択してください</p>
+
+    <!-- 波形ビジュアライザ -->
+    <div id="waveform" class="flex items-center gap-1 mt-6 h-8 opacity-0 transition-opacity duration-500">
+      {Array.from({ length: 20 }).map((_, i) => (
+        <div class="w-1 bg-coral-400 rounded-full transition-all duration-150" style={`height: 8px; animation-delay: ${i * 60}ms`}></div>
+      ))}
+    </div>
+  </div>
+
+  <!-- 録音のヒント -->
+  <div id="hintCard" class="bg-white rounded-2xl p-4 shadow-card border border-warm-200/30">
+    <div class="flex gap-3">
+      <div class="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0 mt-0.5">
+        <svg class="w-4 h-4 text-teal-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
+        </svg>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-gray-700 mb-1">録音のコツ</p>
+        <ul class="text-xs text-warm-400 space-y-1">
+          <li>・ 利用者名とバイタル値を声に出して記録</li>
+          <li>・ ケア内容と観察結果を順に話す</li>
+          <li>・ 特記事項があれば最後に追加</li>
+          <li>・ 車内での録音もOK</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 完了モーダル -->
+  <div id="completeModal" class="fixed inset-0 z-50 flex items-end justify-center bg-black/30 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="bg-white rounded-t-3xl w-full max-w-lg p-6 pb-10 transform translate-y-full transition-transform duration-500 ease-out">
+      <div class="w-10 h-1 bg-warm-200 rounded-full mx-auto mb-6"></div>
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 rounded-full bg-teal-50 flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-teal-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-display font-bold text-teal-800">録音完了</h3>
+        <p class="text-sm text-warm-400 mt-1" id="completeInfo">録音時間: 0:00</p>
+      </div>
+      <div class="space-y-2">
+        <a href="/records/v001" class="block w-full py-3 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-xl text-center font-medium shadow-soft hover:shadow-float transition-shadow">
+          記録を確認する
+        </a>
+        <button id="newRecordBtn" class="block w-full py-3 bg-warm-100 text-teal-700 rounded-xl text-center font-medium hover:bg-warm-200 transition-colors">
+          続けて録音する
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const recordBtn = document.getElementById('recordBtn') as HTMLButtonElement;
+    const patientSelect = document.getElementById('patientSelect') as HTMLSelectElement;
+    const timer = document.getElementById('timer')!;
+    const statusText = document.getElementById('statusText')!;
+    const waveform = document.getElementById('waveform')!;
+    const pulseRing1 = document.getElementById('pulseRing1')!;
+    const pulseRing2 = document.getElementById('pulseRing2')!;
+    const recordIcon = document.getElementById('recordIcon')!;
+    const completeModal = document.getElementById('completeModal')!;
+    const completeInfo = document.getElementById('completeInfo')!;
+    const newRecordBtn = document.getElementById('newRecordBtn')!;
+    const hintCard = document.getElementById('hintCard')!;
+
+    let isRecording = false;
+    let seconds = 0;
+    let timerInterval: number | null = null;
+    let animationFrame: number | null = null;
+
+    // 利用者選択
+    patientSelect.addEventListener('change', () => {
+      if (patientSelect.value) {
+        recordBtn.disabled = false;
+        recordBtn.classList.remove('bg-gradient-to-br', 'from-warm-200', 'to-warm-300');
+        recordBtn.classList.add('bg-gradient-to-br', 'from-teal-500', 'to-teal-600');
+        recordIcon.querySelector('svg')!.classList.remove('text-warm-400');
+        recordIcon.querySelector('svg')!.classList.add('text-white');
+        statusText.textContent = 'タップして録音開始';
+        statusText.classList.remove('text-warm-400');
+        statusText.classList.add('text-teal-600');
+      } else {
+        recordBtn.disabled = true;
+        recordBtn.classList.add('bg-gradient-to-br', 'from-warm-200', 'to-warm-300');
+        recordBtn.classList.remove('bg-gradient-to-br', 'from-teal-500', 'to-teal-600');
+        recordIcon.querySelector('svg')!.classList.add('text-warm-400');
+        recordIcon.querySelector('svg')!.classList.remove('text-white');
+        statusText.textContent = '利用者を選択してください';
+        statusText.classList.add('text-warm-400');
+        statusText.classList.remove('text-teal-600');
+      }
+    });
+
+    // 録音ボタン
+    recordBtn.addEventListener('click', () => {
+      if (!isRecording) {
+        startRecording();
+      } else {
+        stopRecording();
+      }
+    });
+
+    function startRecording() {
+      isRecording = true;
+      seconds = 0;
+
+      // ビジュアル変更
+      recordBtn.classList.remove('from-teal-500', 'to-teal-600');
+      recordBtn.classList.add('from-coral-400', 'to-coral-500', 'animate-pulse-record');
+      recordIcon.innerHTML = `<div class="w-8 h-8 bg-white rounded-lg"></div>`;
+      timer.style.opacity = '1';
+      statusText.textContent = '録音中...';
+      statusText.classList.remove('text-teal-600');
+      statusText.classList.add('text-coral-500');
+      waveform.style.opacity = '1';
+      hintCard.style.opacity = '0.3';
+
+      // パルスリング
+      pulseRing1.style.opacity = '1';
+      pulseRing1.classList.add('animate-breathe');
+      pulseRing2.style.opacity = '1';
+      pulseRing2.classList.add('animate-breathe');
+      pulseRing2.style.animationDelay = '1.5s';
+
+      // タイマー
+      timerInterval = window.setInterval(() => {
+        seconds++;
+        const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+        const s = (seconds % 60).toString().padStart(2, '0');
+        timer.textContent = `${m}:${s}`;
+      }, 1000);
+
+      // 波形アニメーション
+      animateWaveform();
+
+      // 利用者セレクト無効化
+      patientSelect.disabled = true;
+      patientSelect.style.opacity = '0.5';
+    }
+
+    function stopRecording() {
+      isRecording = false;
+
+      // タイマー停止
+      if (timerInterval) clearInterval(timerInterval);
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+
+      // ビジュアルリセット
+      recordBtn.classList.remove('from-coral-400', 'to-coral-500', 'animate-pulse-record');
+      recordBtn.classList.add('from-teal-500', 'to-teal-600');
+      recordIcon.innerHTML = `<svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 15c1.66 0 2.99-1.34 2.99-3L15 6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3z"/><path d="M17 12c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V22h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>`;
+      waveform.style.opacity = '0';
+      pulseRing1.style.opacity = '0';
+      pulseRing1.classList.remove('animate-breathe');
+      pulseRing2.style.opacity = '0';
+      pulseRing2.classList.remove('animate-breathe');
+      hintCard.style.opacity = '1';
+
+      // 利用者セレクト有効化
+      patientSelect.disabled = false;
+      patientSelect.style.opacity = '1';
+
+      // 完了モーダル表示
+      const m = Math.floor(seconds / 60);
+      const s = (seconds % 60).toString().padStart(2, '0');
+      completeInfo.textContent = `録音時間: ${m}:${s}`;
+      showCompleteModal();
+    }
+
+    function animateWaveform() {
+      const bars = waveform.querySelectorAll('div');
+      bars.forEach((bar) => {
+        const height = Math.random() * 24 + 4;
+        (bar as HTMLElement).style.height = `${height}px`;
+      });
+      if (isRecording) {
+        animationFrame = requestAnimationFrame(() => {
+          setTimeout(animateWaveform, 120);
+        });
+      }
+    }
+
+    function showCompleteModal() {
+      completeModal.style.opacity = '1';
+      completeModal.style.pointerEvents = 'auto';
+      const sheet = completeModal.querySelector('div:last-child') as HTMLElement;
+      setTimeout(() => {
+        sheet.style.transform = 'translateY(0)';
+      }, 50);
+    }
+
+    function hideCompleteModal() {
+      const sheet = completeModal.querySelector('div:last-child') as HTMLElement;
+      sheet.style.transform = 'translateY(100%)';
+      setTimeout(() => {
+        completeModal.style.opacity = '0';
+        completeModal.style.pointerEvents = 'none';
+      }, 300);
+    }
+
+    newRecordBtn.addEventListener('click', () => {
+      hideCompleteModal();
+      timer.textContent = '00:00';
+      timer.style.opacity = '0.4';
+      statusText.textContent = 'タップして録音開始';
+      statusText.classList.remove('text-coral-500');
+      statusText.classList.add('text-teal-600');
+      seconds = 0;
+    });
+
+    completeModal.addEventListener('click', (e) => {
+      if (e.target === completeModal) hideCompleteModal();
+    });
+  </script>
+</AppLayout>

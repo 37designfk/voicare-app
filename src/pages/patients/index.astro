@@ -1,0 +1,69 @@
+---
+import AppLayout from '../../layouts/AppLayout.astro';
+import { patients, getPatientRecords } from '../../data/mock';
+---
+
+<AppLayout title="利用者" activeTab="patients">
+  <div class="mb-5">
+    <h2 class="text-xl font-display font-bold text-teal-800">利用者一覧</h2>
+    <p class="text-sm text-warm-400 mt-1">{patients.length}名の利用者</p>
+  </div>
+
+  <!-- 検索 -->
+  <div class="relative mb-5">
+    <svg class="w-4 h-4 text-warm-300 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+    </svg>
+    <input
+      type="text"
+      placeholder="名前で検索..."
+      class="w-full bg-white rounded-xl pl-10 pr-4 py-3 text-sm shadow-card border border-warm-200/30 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:border-teal-400 transition-all placeholder:text-warm-300"
+    />
+  </div>
+
+  <!-- 利用者リスト -->
+  <div class="space-y-3">
+    {patients.map((patient, i) => {
+      const records = getPatientRecords(patient.id);
+      return (
+        <a href={`/patients/${patient.id}`} class="block">
+          <div class="bg-white rounded-2xl p-4 shadow-card border border-warm-200/30 hover:shadow-soft transition-all"
+            style={`animation: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) ${i * 100}ms both`}>
+            <div class="flex items-start gap-3">
+              <div class="w-12 h-12 rounded-xl bg-warm-100 flex items-center justify-center text-2xl flex-shrink-0">
+                {patient.avatar}
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-0.5">
+                  <h3 class="font-bold text-sm text-gray-800">{patient.name}</h3>
+                  <span class="text-[10px] text-warm-400">{patient.age}歳 {patient.gender}</span>
+                </div>
+                <p class="text-xs text-warm-400 mb-2">{patient.careLevel} | {patient.doctor}医師</p>
+                <p class="text-xs text-warm-500 leading-relaxed line-clamp-1">{patient.condition}</p>
+                <div class="flex items-center gap-2 mt-2">
+                  {patient.tags.map(tag => (
+                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-teal-50 text-teal-600 font-medium">{tag}</span>
+                  ))}
+                  <span class="text-[10px] text-warm-300 ml-auto">{records.length}件の記録</span>
+                </div>
+              </div>
+              <svg class="w-4 h-4 text-warm-300 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+              </svg>
+            </div>
+          </div>
+        </a>
+      );
+    })}
+  </div>
+
+  <!-- 利用者追加ボタン -->
+  <div class="mt-5">
+    <button class="w-full py-3 border-2 border-dashed border-warm-200 rounded-2xl text-sm text-warm-400 font-medium hover:border-teal-300 hover:text-teal-500 transition-colors flex items-center justify-center gap-2">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+      </svg>
+      利用者を追加
+    </button>
+  </div>
+</AppLayout>
