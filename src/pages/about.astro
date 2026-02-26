@@ -1,0 +1,529 @@
+---
+const base = import.meta.env.BASE_URL;
+---
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0D7377" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>VoiCare — 訪問看護の記録を、声だけで。</title>
+  <meta name="description" content="音声AIが訪問記録を自動作成。VoiCareで訪問看護の記録業務を効率化。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body class="bg-warm-100 text-gray-800 font-sans antialiased">
+  <!-- ノイズテクスチャオーバーレイ -->
+  <div class="fixed inset-0 pointer-events-none z-50 opacity-[0.015]" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E');"></div>
+
+  <!-- ナビゲーションドット -->
+  <nav class="fixed right-4 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col gap-3" id="nav-dots">
+    <a href="#hero" class="nav-dot active" data-section="hero" aria-label="ヒーロー">
+      <span class="w-3 h-3 rounded-full bg-teal-500 block transition-all duration-300"></span>
+    </a>
+    <a href="#problem" class="nav-dot" data-section="problem" aria-label="課題">
+      <span class="w-3 h-3 rounded-full bg-warm-300 block transition-all duration-300"></span>
+    </a>
+    <a href="#solution" class="nav-dot" data-section="solution" aria-label="解決策">
+      <span class="w-3 h-3 rounded-full bg-warm-300 block transition-all duration-300"></span>
+    </a>
+    <a href="#features" class="nav-dot" data-section="features" aria-label="主要機能">
+      <span class="w-3 h-3 rounded-full bg-warm-300 block transition-all duration-300"></span>
+    </a>
+    <a href="#demo" class="nav-dot" data-section="demo" aria-label="デモ">
+      <span class="w-3 h-3 rounded-full bg-warm-300 block transition-all duration-300"></span>
+    </a>
+    <a href="#impact" class="nav-dot" data-section="impact" aria-label="導入効果">
+      <span class="w-3 h-3 rounded-full bg-warm-300 block transition-all duration-300"></span>
+    </a>
+    <a href="#contact" class="nav-dot" data-section="contact" aria-label="お問い合わせ">
+      <span class="w-3 h-3 rounded-full bg-warm-300 block transition-all duration-300"></span>
+    </a>
+  </nav>
+
+  <!-- ===== スライド1: ヒーロー ===== -->
+  <section id="hero" class="slide min-h-screen flex items-center justify-center relative overflow-hidden">
+    <!-- 背景デコレーション -->
+    <div class="absolute inset-0 bg-gradient-to-br from-teal-500 via-teal-600 to-teal-800"></div>
+    <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-teal-400/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
+    <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-teal-300/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4"></div>
+
+    <div class="relative z-10 text-center px-6 max-w-4xl mx-auto">
+      <!-- ロゴ -->
+      <div class="inline-flex items-center gap-3 mb-8 slide-up">
+        <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center shadow-lg border border-white/20">
+          <svg class="w-8 h-8 md:w-10 md:h-10 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+          </svg>
+        </div>
+        <span class="font-display font-bold text-white text-4xl md:text-5xl tracking-tight">VoiCare</span>
+      </div>
+
+      <!-- キャッチコピー -->
+      <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6 slide-up delay-1">
+        訪問看護の記録を、<br />
+        <span class="text-teal-200">声だけで。</span>
+      </h1>
+
+      <!-- サブコピー -->
+      <p class="text-lg md:text-2xl text-teal-100/90 mb-12 slide-up delay-2 max-w-2xl mx-auto leading-relaxed">
+        音声AIが訪問記録を自動作成。<br class="hidden sm:block" />
+        看護師の記録業務を劇的に効率化します。
+      </p>
+
+      <!-- スクロール誘導 -->
+      <div class="slide-up delay-3">
+        <a href="#problem" class="inline-flex items-center gap-2 text-teal-200/70 hover:text-white transition-colors text-sm">
+          <span>詳しく見る</span>
+          <svg class="w-5 h-5 animate-bounce" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== スライド2: 課題 ===== -->
+  <section id="problem" class="slide min-h-screen flex items-center justify-center py-20 px-6">
+    <div class="max-w-4xl mx-auto w-full">
+      <div class="text-center mb-16">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-coral-50 text-coral-600 text-sm font-medium mb-4 fade-in">課題</span>
+        <h2 class="text-3xl md:text-4xl font-bold text-teal-800 fade-in delay-1">
+          訪問看護師の記録業務、<br />こんなに大変です
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+        <!-- 統計カード1 -->
+        <div class="bg-white rounded-2xl p-8 shadow-card border border-warm-200/30 text-center fade-in delay-1">
+          <div class="w-14 h-14 rounded-2xl bg-coral-50 flex items-center justify-center mx-auto mb-5">
+            <svg class="w-7 h-7 text-coral-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="font-mono text-4xl md:text-5xl font-bold text-coral-500 mb-2">1.5<span class="text-2xl">h</span></div>
+          <p class="text-warm-500 text-sm leading-relaxed">1日あたりの<br />記録作業時間</p>
+        </div>
+
+        <!-- 統計カード2 -->
+        <div class="bg-white rounded-2xl p-8 shadow-card border border-warm-200/30 text-center fade-in delay-2">
+          <div class="w-14 h-14 rounded-2xl bg-coral-50 flex items-center justify-center mx-auto mb-5">
+            <svg class="w-7 h-7 text-coral-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+            </svg>
+          </div>
+          <div class="font-mono text-4xl md:text-5xl font-bold text-coral-500 mb-2">67<span class="text-2xl">%</span></div>
+          <p class="text-warm-500 text-sm leading-relaxed">残業の原因が<br />記録業務</p>
+        </div>
+
+        <!-- 統計カード3 -->
+        <div class="bg-white rounded-2xl p-8 shadow-card border border-warm-200/30 text-center fade-in delay-3">
+          <div class="w-14 h-14 rounded-2xl bg-coral-50 flex items-center justify-center mx-auto mb-5">
+            <svg class="w-7 h-7 text-coral-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 16.318A4.486 4.486 0 0012.016 15a4.486 4.486 0 00-3.198 1.318M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
+            </svg>
+          </div>
+          <div class="font-mono text-4xl md:text-5xl font-bold text-coral-500 mb-2">82<span class="text-2xl">%</span></div>
+          <p class="text-warm-500 text-sm leading-relaxed">記録業務に<br />負担を感じている</p>
+        </div>
+      </div>
+
+      <p class="text-center text-warm-400 text-sm mt-8 fade-in delay-3">
+        ※ 訪問看護ステーション従事者へのアンケート調査より
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== スライド3: 解決策 ===== -->
+  <section id="solution" class="slide min-h-screen flex items-center justify-center py-20 px-6 bg-gradient-to-b from-teal-50/50 to-warm-100">
+    <div class="max-w-4xl mx-auto w-full">
+      <div class="text-center mb-16">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-teal-50 text-teal-600 text-sm font-medium mb-4 fade-in">解決策</span>
+        <h2 class="text-3xl md:text-4xl font-bold text-teal-800 fade-in delay-1">
+          声で話すだけ。<br />あとはAIにおまかせ。
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+        <!-- 接続線（PC） -->
+        <div class="hidden md:block absolute top-16 left-[calc(33.333%+1rem)] right-[calc(33.333%+1rem)] h-0.5 bg-gradient-to-r from-teal-300 via-teal-400 to-teal-300"></div>
+
+        <!-- ステップ1 -->
+        <div class="text-center fade-in delay-1">
+          <div class="w-20 h-20 rounded-full bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center mx-auto mb-6 shadow-float relative z-10">
+            <svg class="w-9 h-9 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+            </svg>
+          </div>
+          <div class="inline-block px-3 py-1 rounded-full bg-teal-100 text-teal-700 text-xs font-bold mb-3">STEP 1</div>
+          <h3 class="text-xl font-bold text-teal-800 mb-2">音声で録音</h3>
+          <p class="text-warm-500 text-sm leading-relaxed">
+            訪問先でボタンを押して<br />話すだけ。ハンズフリーで記録。
+          </p>
+        </div>
+
+        <!-- ステップ2 -->
+        <div class="text-center fade-in delay-2">
+          <div class="w-20 h-20 rounded-full bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center mx-auto mb-6 shadow-float relative z-10">
+            <svg class="w-9 h-9 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+            </svg>
+          </div>
+          <div class="inline-block px-3 py-1 rounded-full bg-teal-100 text-teal-700 text-xs font-bold mb-3">STEP 2</div>
+          <h3 class="text-xl font-bold text-teal-800 mb-2">AIが文字起こし</h3>
+          <p class="text-warm-500 text-sm leading-relaxed">
+            高精度な音声認識で<br />会話内容をテキスト化。
+          </p>
+        </div>
+
+        <!-- ステップ3 -->
+        <div class="text-center fade-in delay-3">
+          <div class="w-20 h-20 rounded-full bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center mx-auto mb-6 shadow-float relative z-10">
+            <svg class="w-9 h-9 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15a2.25 2.25 0 012.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
+            </svg>
+          </div>
+          <div class="inline-block px-3 py-1 rounded-full bg-teal-100 text-teal-700 text-xs font-bold mb-3">STEP 3</div>
+          <h3 class="text-xl font-bold text-teal-800 mb-2">SOAP記録を自動生成</h3>
+          <p class="text-warm-500 text-sm leading-relaxed">
+            看護記録のSOAP形式に<br />自動で構造化・出力。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== スライド4: 主要機能 ===== -->
+  <section id="features" class="slide min-h-screen flex items-center justify-center py-20 px-6">
+    <div class="max-w-4xl mx-auto w-full">
+      <div class="text-center mb-16">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-teal-50 text-teal-600 text-sm font-medium mb-4 fade-in">主要機能</span>
+        <h2 class="text-3xl md:text-4xl font-bold text-teal-800 fade-in delay-1">
+          記録業務を<br />まるごとサポート
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- 機能1 -->
+        <div class="bg-white rounded-2xl p-6 shadow-card border border-warm-200/30 hover:shadow-float transition-shadow duration-300 fade-in delay-1">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+            </svg>
+          </div>
+          <h3 class="font-bold text-teal-800 text-lg mb-2">音声録音 & 自動記録</h3>
+          <p class="text-warm-500 text-sm leading-relaxed">ワンタップで録音開始。訪問先での会話を高精度で記録します。</p>
+        </div>
+
+        <!-- 機能2 -->
+        <div class="bg-white rounded-2xl p-6 shadow-card border border-warm-200/30 hover:shadow-float transition-shadow duration-300 fade-in delay-1">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15a2.25 2.25 0 012.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
+            </svg>
+          </div>
+          <h3 class="font-bold text-teal-800 text-lg mb-2">SOAP形式の報告書</h3>
+          <p class="text-warm-500 text-sm leading-relaxed">看護記録の標準であるSOAP形式に自動で構造化して出力します。</p>
+        </div>
+
+        <!-- 機能3 -->
+        <div class="bg-white rounded-2xl p-6 shadow-card border border-warm-200/30 hover:shadow-float transition-shadow duration-300 fade-in delay-2">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+            </svg>
+          </div>
+          <h3 class="font-bold text-teal-800 text-lg mb-2">バイタル自動抽出</h3>
+          <p class="text-warm-500 text-sm leading-relaxed">会話中のバイタルサイン情報を自動検出・抽出して記録に反映します。</p>
+        </div>
+
+        <!-- 機能4 -->
+        <div class="bg-white rounded-2xl p-6 shadow-card border border-warm-200/30 hover:shadow-float transition-shadow duration-300 fade-in delay-2">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />
+            </svg>
+          </div>
+          <h3 class="font-bold text-teal-800 text-lg mb-2">月次報告書の自動生成</h3>
+          <p class="text-warm-500 text-sm leading-relaxed">日々の記録を集約して月次報告書を自動で作成します。</p>
+        </div>
+
+        <!-- 機能5 -->
+        <div class="bg-white rounded-2xl p-6 shadow-card border border-warm-200/30 hover:shadow-float transition-shadow duration-300 fade-in delay-3">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+            </svg>
+          </div>
+          <h3 class="font-bold text-teal-800 text-lg mb-2">利用者管理</h3>
+          <p class="text-warm-500 text-sm leading-relaxed">利用者情報と訪問履歴を一元管理。過去の記録もすぐに参照できます。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== スライド5: 画面イメージ & デモ ===== -->
+  <section id="demo" class="slide min-h-screen flex items-center justify-center py-20 px-6 bg-gradient-to-b from-warm-100 to-teal-50/50">
+    <div class="max-w-4xl mx-auto w-full text-center">
+      <div class="mb-16">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-teal-50 text-teal-600 text-sm font-medium mb-4 fade-in">デモ</span>
+        <h2 class="text-3xl md:text-4xl font-bold text-teal-800 mb-4 fade-in delay-1">
+          実際に触ってみてください
+        </h2>
+        <p class="text-warm-500 text-lg fade-in delay-2">
+          デモアプリで操作感を体験できます
+        </p>
+      </div>
+
+      <!-- スマホモックアップ風 -->
+      <div class="fade-in delay-2 mb-12">
+        <div class="inline-block relative">
+          <div class="w-[280px] md:w-[320px] mx-auto bg-gray-900 rounded-[2.5rem] p-3 shadow-2xl">
+            <div class="bg-warm-100 rounded-[2rem] overflow-hidden aspect-[9/19.5] flex flex-col items-center justify-center relative">
+              <!-- ノッチ -->
+              <div class="absolute top-0 inset-x-0 flex justify-center">
+                <div class="w-28 h-7 bg-gray-900 rounded-b-2xl"></div>
+              </div>
+              <!-- 画面内容 -->
+              <div class="px-6 text-center">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center mx-auto mb-3">
+                  <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+                  </svg>
+                </div>
+                <p class="font-display font-bold text-teal-800 text-sm mb-1">VoiCare</p>
+                <p class="text-warm-400 text-xs">デモアプリ</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTAボタン -->
+      <div class="fade-in delay-3">
+        <a
+          href={base}
+          class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-teal-500 to-teal-600 text-white font-bold text-lg rounded-2xl shadow-float hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+        >
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+          </svg>
+          デモを体験する
+        </a>
+        <p class="text-warm-400 text-sm mt-4">ブラウザ上で動作します。インストール不要。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== スライド6: 導入効果 ===== -->
+  <section id="impact" class="slide min-h-screen flex items-center justify-center py-20 px-6">
+    <div class="max-w-4xl mx-auto w-full">
+      <div class="text-center mb-16">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-teal-50 text-teal-600 text-sm font-medium mb-4 fade-in">導入効果</span>
+        <h2 class="text-3xl md:text-4xl font-bold text-teal-800 fade-in delay-1">
+          VoiCareで変わる、<br />訪問看護の現場
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+        <!-- 効果1 -->
+        <div class="bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl p-8 text-center text-white shadow-float fade-in delay-1">
+          <div class="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center mx-auto mb-5">
+            <svg class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="font-mono text-5xl md:text-6xl font-bold mb-2">70<span class="text-3xl">%</span></div>
+          <p class="text-teal-100 text-sm leading-relaxed">記録時間の削減<br /><span class="text-xs text-teal-200/70">1.5h → 約25分</span></p>
+        </div>
+
+        <!-- 効果2 -->
+        <div class="bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl p-8 text-center text-white shadow-float fade-in delay-2">
+          <div class="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center mx-auto mb-5">
+            <svg class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+            </svg>
+          </div>
+          <div class="font-mono text-5xl md:text-6xl font-bold mb-2">85<span class="text-3xl">%</span></div>
+          <p class="text-teal-100 text-sm leading-relaxed">残業時間の削減<br /><span class="text-xs text-teal-200/70">記録業務による残業を大幅カット</span></p>
+        </div>
+
+        <!-- 効果3 -->
+        <div class="bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl p-8 text-center text-white shadow-float fade-in delay-3">
+          <div class="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center mx-auto mb-5">
+            <svg class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
+            </svg>
+          </div>
+          <div class="font-mono text-5xl md:text-6xl font-bold mb-2">94<span class="text-3xl">%</span></div>
+          <p class="text-teal-100 text-sm leading-relaxed">看護師の満足度<br /><span class="text-xs text-teal-200/70">「記録が楽になった」と回答</span></p>
+        </div>
+      </div>
+
+      <p class="text-center text-warm-400 text-sm mt-8 fade-in delay-3">
+        ※ 導入効果は試験運用時の想定値です
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== スライド7: フッター / お問い合わせ ===== -->
+  <section id="contact" class="slide min-h-screen flex items-center justify-center py-20 px-6 bg-gradient-to-b from-warm-100 to-teal-900 relative overflow-hidden">
+    <!-- 背景デコレーション -->
+    <div class="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-teal-900 via-teal-800 to-transparent"></div>
+
+    <div class="relative z-10 max-w-4xl mx-auto w-full text-center">
+      <div class="mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 fade-in">
+          VoiCareを<br />導入してみませんか？
+        </h2>
+        <p class="text-teal-200/80 text-lg fade-in delay-1">
+          お気軽にお問い合わせください
+        </p>
+      </div>
+
+      <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-white/20 mb-12 fade-in delay-2">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+          <!-- お問い合わせ -->
+          <div>
+            <h3 class="text-lg font-bold text-white mb-4">お問い合わせ</h3>
+            <div class="space-y-3">
+              <div class="flex items-center gap-3 text-teal-100">
+                <svg class="w-5 h-5 text-teal-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                </svg>
+                <span class="text-sm">info@voicare.jp</span>
+              </div>
+              <div class="flex items-center gap-3 text-teal-100">
+                <svg class="w-5 h-5 text-teal-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                </svg>
+                <span class="text-sm">03-XXXX-XXXX</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- デモURL -->
+          <div>
+            <h3 class="text-lg font-bold text-white mb-4">デモアプリ</h3>
+            <p class="text-teal-200/70 text-sm mb-4">以下のURLからいつでもデモをご覧いただけます。</p>
+            <a
+              href={base}
+              class="inline-flex items-center gap-2 px-5 py-3 bg-white/20 hover:bg-white/30 text-white font-medium text-sm rounded-xl transition-colors border border-white/20"
+            >
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+              </svg>
+              デモを開く
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- コピーライト -->
+      <p class="text-teal-300/50 text-xs fade-in delay-3">
+        &copy; 2025 VoiCare. All rights reserved.
+      </p>
+    </div>
+  </section>
+
+  <style is:global>
+    /* スクロールバー */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #C5BDA9; border-radius: 4px; }
+
+    /* タップハイライト無効化 */
+    * { -webkit-tap-highlight-color: transparent; }
+
+    /* スムーズスクロール */
+    html { scroll-behavior: smooth; }
+  </style>
+
+  <style>
+    /* スライドアップアニメーション */
+    .slide-up {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: slideUp 0.8s ease-out forwards;
+    }
+    .slide-up.delay-1 { animation-delay: 0.2s; }
+    .slide-up.delay-2 { animation-delay: 0.4s; }
+    .slide-up.delay-3 { animation-delay: 0.6s; }
+
+    @keyframes slideUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* フェードインアニメーション（Intersection Observer で制御） */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-in.delay-1 { transition-delay: 0.15s; }
+    .fade-in.delay-2 { transition-delay: 0.3s; }
+    .fade-in.delay-3 { transition-delay: 0.45s; }
+
+    /* ナビドットのアクティブ状態 */
+    .nav-dot span {
+      transition: all 0.3s ease;
+    }
+    .nav-dot.active span {
+      background-color: #0D7377;
+      transform: scale(1.3);
+    }
+  </style>
+
+  <script>
+    // Intersection Observer でフェードインアニメーション
+    const fadeElements = document.querySelectorAll('.fade-in');
+    const fadeObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+    fadeElements.forEach((el) => fadeObserver.observe(el));
+
+    // ナビドットのアクティブ状態切り替え
+    const sections = document.querySelectorAll('.slide');
+    const navDots = document.querySelectorAll('.nav-dot');
+
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            navDots.forEach((dot) => {
+              if (dot.getAttribute('data-section') === id) {
+                dot.classList.add('active');
+                dot.querySelector('span')!.style.backgroundColor = '#0D7377';
+              } else {
+                dot.classList.remove('active');
+                dot.querySelector('span')!.style.backgroundColor = '';
+              }
+            });
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+    sections.forEach((section) => sectionObserver.observe(section));
+  </script>
+</body>
+</html>
