@@ -1,6 +1,7 @@
 ---
 import AppLayout from '../layouts/AppLayout.astro';
 import { patients } from '../data/mock';
+const base = import.meta.env.BASE_URL;
 ---
 
 <AppLayout title="録音" activeTab="record">
@@ -92,7 +93,7 @@ import { patients } from '../data/mock';
         <p class="text-sm text-warm-400 mt-1" id="completeInfo">録音時間: 0:00</p>
       </div>
       <div class="space-y-2">
-        <a href="/records/v001" class="block w-full py-3 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-xl text-center font-medium shadow-soft hover:shadow-float transition-shadow">
+        <a href={`${base}records/v001/`} class="block w-full py-3 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-xl text-center font-medium shadow-soft hover:shadow-float transition-shadow">
           記録を確認する
         </a>
         <button id="newRecordBtn" class="block w-full py-3 bg-warm-100 text-teal-700 rounded-xl text-center font-medium hover:bg-warm-200 transition-colors">

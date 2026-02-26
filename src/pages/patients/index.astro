@@ -1,6 +1,7 @@
 ---
 import AppLayout from '../../layouts/AppLayout.astro';
 import { patients, getPatientRecords } from '../../data/mock';
+const base = import.meta.env.BASE_URL;
 ---
 
 <AppLayout title="利用者" activeTab="patients">
@@ -26,7 +27,7 @@ import { patients, getPatientRecords } from '../../data/mock';
     {patients.map((patient, i) => {
       const records = getPatientRecords(patient.id);
       return (
-        <a href={`/patients/${patient.id}`} class="block">
+        <a href={`${base}patients/${patient.id}/`} class="block">
           <div class="bg-white rounded-2xl p-4 shadow-card border border-warm-200/30 hover:shadow-soft transition-all"
             style={`animation: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) ${i * 100}ms both`}>
             <div class="flex items-start gap-3">

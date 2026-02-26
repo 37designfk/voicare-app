@@ -6,13 +6,14 @@ interface Props {
   backHref?: string;
 }
 
-const { title, activeTab = 'home', showBack = false, backHref = '/' } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const { title, activeTab = 'home', showBack = false, backHref = base } = Astro.props;
 
 const tabs = [
-  { id: 'home', label: 'ホーム', href: '/', icon: 'home' },
-  { id: 'record', label: '録音', href: '/record', icon: 'mic' },
-  { id: 'records', label: '記録', href: '/records', icon: 'list' },
-  { id: 'patients', label: '利用者', href: '/patients', icon: 'users' },
+  { id: 'home', label: 'ホーム', href: base, icon: 'home' },
+  { id: 'record', label: '録音', href: `${base}record/`, icon: 'mic' },
+  { id: 'records', label: '記録', href: `${base}records/`, icon: 'list' },
+  { id: 'patients', label: '利用者', href: `${base}patients/`, icon: 'users' },
 ];
 ---
 

@@ -2,6 +2,7 @@
 import AppLayout from '../../layouts/AppLayout.astro';
 import { visitRecords, getStatusColor, getStatusLabel, patients } from '../../data/mock';
 
+const base = import.meta.env.BASE_URL;
 const grouped = visitRecords.reduce((acc, r) => {
   if (!acc[r.date]) acc[r.date] = [];
   acc[r.date].push(r);
@@ -40,7 +41,7 @@ function formatDate(dateStr: string) {
           {grouped[date].map(record => {
             const patient = patients.find(p => p.id === record.patientId);
             return (
-              <a href={`/records/${record.id}`} class="block">
+              <a href={`${base}records/${record.id}/`} class="block">
                 <div class="bg-white rounded-2xl p-4 shadow-card border border-warm-200/30 hover:shadow-soft transition-all">
                   <div class="flex items-start gap-3">
                     <div class="w-10 h-10 rounded-xl bg-warm-100 flex items-center justify-center text-lg flex-shrink-0">

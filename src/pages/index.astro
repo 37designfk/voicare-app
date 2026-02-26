@@ -2,6 +2,7 @@
 import AppLayout from '../layouts/AppLayout.astro';
 import { patients, visitRecords, stats, todaySchedule, getStatusColor, getStatusLabel } from '../data/mock';
 
+const base = import.meta.env.BASE_URL;
 const recentRecords = visitRecords.filter(r => r.date === '2026-02-27');
 ---
 
@@ -76,7 +77,7 @@ const recentRecords = visitRecords.filter(r => r.date === '2026-02-27');
   </div>
 
   <!-- 録音クイックアクション -->
-  <a href="/record" class="block mb-6 group">
+  <a href={`${base}record/`} class="block mb-6 group">
     <div class="relative bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl p-5 shadow-float overflow-hidden">
       <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-8 translate-x-8"></div>
       <div class="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-6 -translate-x-6"></div>
@@ -108,7 +109,7 @@ const recentRecords = visitRecords.filter(r => r.date === '2026-02-27');
         const patient = patients.find(p => p.id === visit.patientId);
         const record = recentRecords.find(r => r.patientId === visit.patientId);
         return (
-          <a href={record ? `/records/${record.id}` : '#'} class="block">
+          <a href={record ? `${base}records/${record.id}/` : '#'} class="block">
             <div class="bg-white rounded-2xl p-4 shadow-card border border-warm-200/30 flex items-center gap-3 hover:shadow-soft transition-shadow">
               <div class="w-11 h-11 rounded-xl bg-warm-100 flex items-center justify-center text-xl flex-shrink-0">
                 {patient?.avatar}
@@ -138,7 +139,7 @@ const recentRecords = visitRecords.filter(r => r.date === '2026-02-27');
   <section>
     <div class="flex items-center justify-between mb-3">
       <h3 class="font-display font-bold text-teal-800">月次報告書</h3>
-      <a href="/monthly" class="text-xs text-teal-500 font-medium hover:text-teal-600">すべて見る</a>
+      <a href={`${base}monthly/`} class="text-xs text-teal-500 font-medium hover:text-teal-600">すべて見る</a>
     </div>
     <div class="bg-white rounded-2xl p-4 shadow-card border border-warm-200/30">
       <div class="flex items-center gap-3">
@@ -151,7 +152,7 @@ const recentRecords = visitRecords.filter(r => r.date === '2026-02-27');
           <p class="font-medium text-sm">2026年2月 報告書</p>
           <p class="text-xs text-warm-400 mt-0.5">3名分 | 自動生成済み</p>
         </div>
-        <a href="/monthly" class="px-3 py-1.5 bg-teal-50 text-teal-600 rounded-lg text-xs font-medium hover:bg-teal-100 transition-colors">
+        <a href={`${base}monthly/`} class="px-3 py-1.5 bg-teal-50 text-teal-600 rounded-lg text-xs font-medium hover:bg-teal-100 transition-colors">
           確認する
         </a>
       </div>

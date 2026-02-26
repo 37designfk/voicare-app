@@ -1,9 +1,10 @@
 ---
 import AppLayout from '../layouts/AppLayout.astro';
 import { monthlyReports, patients } from '../data/mock';
+const base = import.meta.env.BASE_URL;
 ---
 
-<AppLayout title="月次報告書" activeTab="records" showBack backHref="/">
+<AppLayout title="月次報告書" activeTab="records" showBack backHref={base}>
   <div class="mb-5">
     <h2 class="text-xl font-display font-bold text-teal-800">月次報告書</h2>
     <p class="text-sm text-warm-400 mt-1">2026年2月 | {monthlyReports.length}名分</p>
